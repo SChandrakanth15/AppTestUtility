@@ -4,6 +4,9 @@
  */
 package DummyP;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -27,13 +31,47 @@ import org.json.JSONObject;
  * @author sambit.sahu
  */
 public class Screen1 extends javax.swing.JFrame {
+    
+    private DefaultTableModel tableModel;
+    private JTable headersTable;
 
     /**
      * Creates new form Screen1
      */
     public Screen1() {
         initComponents();
+        setUpHeaderComponents();
     }
+    
+    private void setUpHeaderComponents() {
+    // Initialize table model and table
+    String[] columnNames = {"Header Name", "Header Value"};
+    tableModel = new DefaultTableModel(columnNames, 0);
+    headersTable = new JTable(tableModel);
+    
+    JScrollPane scrollPane = new JScrollPane(headersTable);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(400,150));
+    if (headersPanel != null) {
+        headersPanel.removeAll(); // Clear any existing content
+        headersPanel.setLayout(new BorderLayout());
+        headersPanel.add(scrollPane,BorderLayout.CENTER);
+        // Revalidate and repaint headersPanel
+        headersPanel.revalidate();
+        headersPanel.repaint();
+    }
+}
+    
+    private void deleteSelectedRow() {
+       int selectedRow = headersTable.getSelectedRow();
+    if (selectedRow != -1) {
+        tableModel.removeRow(selectedRow);
+    } else {
+        JOptionPane.showMessageDialog(this, "Please select a row to delete.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
     private static final Map<String, Object> jsonFieldsAndValues = new LinkedHashMap<>();
 
     /**
@@ -52,8 +90,10 @@ public class Screen1 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jsonrequestBody = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
+        deleteHeaderBtn = new javax.swing.JButton();
+        addHeaderBtn = new javax.swing.JButton();
+        headersJScrollPane = new javax.swing.JScrollPane();
         headersPanel = new javax.swing.JPanel();
-        addHeadersBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,30 +129,24 @@ public class Screen1 extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Enter Json Request Body");
 
-        addHeadersBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        addHeadersBtn.setText("Add");
-        addHeadersBtn.addActionListener(new java.awt.event.ActionListener() {
+        deleteHeaderBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        deleteHeaderBtn.setText("Delete Row");
+        deleteHeaderBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addHeadersBtnActionPerformed(evt);
+                deleteHeaderBtnActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout headersPanelLayout = new javax.swing.GroupLayout(headersPanel);
-        headersPanel.setLayout(headersPanelLayout);
-        headersPanelLayout.setHorizontalGroup(
-            headersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headersPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(addHeadersBtn)
-                .addContainerGap())
-        );
-        headersPanelLayout.setVerticalGroup(
-            headersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headersPanelLayout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
-                .addComponent(addHeadersBtn)
-                .addGap(37, 37, 37))
-        );
+        addHeaderBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addHeaderBtn.setText("Add Row");
+        addHeaderBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addHeaderBtnActionPerformed(evt);
+            }
+        });
+
+        headersPanel.setLayout(new javax.swing.BoxLayout(headersPanel, javax.swing.BoxLayout.Y_AXIS));
+        headersJScrollPane.setViewportView(headersPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -124,19 +158,31 @@ public class Screen1 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(headersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(headersJScrollPane)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(deleteHeaderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(addHeaderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(145, Short.MAX_VALUE)
-                .addComponent(headersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(addHeaderBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteHeaderBtn)
+                        .addGap(21, 21, 21))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(headersJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -203,8 +249,21 @@ public class Screen1 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SubmitBtnActionPerformed
 
-    private static void addHeader(String name, String value) {
+    private void addHeaderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addHeaderBtnActionPerformed
+        // TODO add your handling code here:
+        OpenHeaderDialog dialog = new OpenHeaderDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_addHeaderBtnActionPerformed
 
+    private void deleteHeaderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteHeaderBtnActionPerformed
+        // TODO add your handling code here:
+        deleteSelectedRow();
+    }//GEN-LAST:event_deleteHeaderBtnActionPerformed
+
+    public void addHeader(String name, String value) {
+        if (tableModel != null) {
+        tableModel.addRow(new Object[]{name, value});
+        }
     }
 
     private static Object[][] prepareTableData(Map<String, Object> fieldKeyAndValueMap) {
@@ -264,51 +323,46 @@ public class Screen1 extends javax.swing.JFrame {
         return false;
     }
 
-    private static void showHeaderDialog() {
-        JDialog headersDialog = new JDialog();
-        headersDialog.setSize(300, 200);
-        headersDialog.setLayout(new GridLayout(3, 2, 10, 10));
-        JLabel nameLabel = new JLabel("Name: ");
-        JTextField nameTextField = new JTextField();
-        JLabel valueLabel = new JLabel("Value: ");
-        JTextField valueTextField = new JTextField();
+//    private static void showHeaderDialog() {
+//        JDialog headersDialog = new JDialog();
+//        headersDialog.setSize(300, 200);
+//        headersDialog.setLayout(new GridLayout(3, 2, 10, 10));
+//        JLabel nameLabel = new JLabel("Name: ");
+//        JTextField nameTextField = new JTextField();
+//        JLabel valueLabel = new JLabel("Value: ");
+//        JTextField valueTextField = new JTextField();
+//
+//        JButton addButton = new JButton("Add");
+//        JButton clearButton = new JButton("Clear");
+//        JButton exitButton = new JButton("Exit");
+//
+//        addButton.addActionListener(e -> {
+//            String name = nameTextField.getText().trim();
+//            String value = valueTextField.getText().trim();
+//            if (!name.isEmpty() && !value.isEmpty()) {
+//                addHeader(name, value);
+//                headersDialog.dispose();
+//            } else {
+//                JOptionPane.showMessageDialog(headersDialog, "Name and value cannot be empty", "Error", JOptionPane.ERROR);
+//            }
+//        });
+//        clearButton.addActionListener(e -> {
+//            nameTextField.setText("");
+//            valueTextField.setText("");
+//
+//            headersDialog.add(nameLabel);
+//            headersDialog.add(nameTextField);
+//            headersDialog.add(valueLabel);
+//            headersDialog.add(valueTextField);
+//            headersDialog.add(new JLabel());
+//            headersDialog.add(new JLabel());
+//            headersDialog.add(addButton);
+//            headersDialog.add(clearButton);
+//            headersDialog.add(exitButton);
+//            headersDialog.setVisible(true);
+//        });
+//    }
 
-        JButton addButton = new JButton("Add");
-        JButton clearButton = new JButton("Clear");
-        JButton exitButton = new JButton("Exit");
-
-        addButton.addActionListener(e -> {
-            String name = nameTextField.getText().trim();
-            String value = valueTextField.getText().trim();
-            if (!name.isEmpty() && !value.isEmpty()) {
-                addHeader(name, value);
-                headersDialog.dispose();
-            } else {
-                JOptionPane.showMessageDialog(headersDialog, "Name and value cannot be empty", "Error", JOptionPane.ERROR);
-            }
-        });
-        clearButton.addActionListener(e -> {
-            nameTextField.setText("");
-            valueTextField.setText("");
-
-            headersDialog.add(nameLabel);
-            headersDialog.add(nameTextField);
-            headersDialog.add(valueLabel);
-            headersDialog.add(valueTextField);
-            headersDialog.add(new JLabel());
-            headersDialog.add(new JLabel());
-            headersDialog.add(addButton);
-            headersDialog.add(clearButton);
-            headersDialog.add(exitButton);
-            headersDialog.setVisible(true);
-        });
-
-    }
-
-
-    private void addHeadersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addHeadersBtnActionPerformed
-        showHeaderDialog();
-    }//GEN-LAST:event_addHeadersBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,7 +409,9 @@ public class Screen1 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SubmitBtn;
-    private javax.swing.JButton addHeadersBtn;
+    private javax.swing.JButton addHeaderBtn;
+    private javax.swing.JButton deleteHeaderBtn;
+    private javax.swing.JScrollPane headersJScrollPane;
     private javax.swing.JPanel headersPanel;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
