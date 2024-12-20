@@ -6,22 +6,14 @@ package DummyP;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,8 +33,11 @@ public class Screen1 extends javax.swing.JFrame {
     public Screen1() {
         initComponents();
         setUpHeaderComponents();
+        jsonScrollPane.setEnabled(false);
+        jsonrequestBody.setEnabled(false);
+        jsonTextLabel.setEnabled(false);
     }
-    
+
     private void setUpHeaderComponents() {
     // Initialize table model and table
     String[] columnNames = {"Header Name", "Header Value"};
@@ -83,17 +78,26 @@ public class Screen1 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel5 = new javax.swing.JPanel();
+        bottomPanel = new javax.swing.JPanel();
         SubmitBtn = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jsonScrollPane = new javax.swing.JScrollPane();
         jsonrequestBody = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        jsonrequestBody = new javax.swing.JTextArea();
+        jsonTextLabel = new javax.swing.JLabel();
         deleteHeaderBtn = new javax.swing.JButton();
         addHeaderBtn = new javax.swing.JButton();
         headersJScrollPane = new javax.swing.JScrollPane();
         headersPanel = new javax.swing.JPanel();
+        baseUrlLabel = new javax.swing.JLabel();
+        baseUrl = new javax.swing.JTextField();
+        pathLabel = new javax.swing.JLabel();
+        path = new javax.swing.JTextField();
+        methodLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        name = new javax.swing.JTextField();
+        methodDropDown = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,29 +109,33 @@ public class Screen1 extends javax.swing.JFrame {
                 SubmitBtnActionPerformed(evt);
             }
         });
-        jPanel5.add(SubmitBtn);
+        bottomPanel.add(SubmitBtn);
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton5.setText("Reset");
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        resetBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        resetBtn.setText("Reset");
+        resetBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                resetBtnActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton5);
+        bottomPanel.add(resetBtn);
 
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton6.setText("Exit");
         jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel5.add(jButton6);
+        bottomPanel.add(jButton6);
 
         jsonrequestBody.setColumns(20);
         jsonrequestBody.setRows(5);
-        jScrollPane1.setViewportView(jsonrequestBody);
+        jsonScrollPane.setViewportView(jsonrequestBody);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Enter Json Request Body");
+        jsonrequestBody.setColumns(20);
+        jsonrequestBody.setRows(5);
+        jsonScrollPane.setViewportView(jsonrequestBody);
+
+        jsonTextLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jsonTextLabel.setText("Enter Json Request Body");
 
         deleteHeaderBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         deleteHeaderBtn.setText("Delete Row");
@@ -148,55 +156,126 @@ public class Screen1 extends javax.swing.JFrame {
         headersPanel.setLayout(new javax.swing.BoxLayout(headersPanel, javax.swing.BoxLayout.Y_AXIS));
         headersJScrollPane.setViewportView(headersPanel);
 
+        baseUrlLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        baseUrlLabel.setText("Base URL");
+
+        pathLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        pathLabel.setText("Path");
+
+        methodLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        methodLabel.setText("Method");
+
+        nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        nameLabel.setText("Name");
+
+        methodDropDown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Get", "Post", "Put", "Delete","Patch" }));
+        methodDropDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                methodDropDownActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(methodLabel)
+                        .addGap(12, 12, 12)
+                        .addComponent(methodDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(headersJScrollPane)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addHeaderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteHeaderBtn)))
+                    .addComponent(jsonTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jsonScrollPane)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(headersJScrollPane)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(deleteHeaderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(addHeaderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addContainerGap())))
+                                .addComponent(nameLabel)
+                                .addGap(24, 24, 24)
+                                .addComponent(name))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(baseUrlLabel)
+                                .addGap(6, 6, 6)
+                                .addComponent(baseUrl))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pathLabel)
+                                .addGap(33, 33, 33)
+                                .addComponent(path)))
+                        .addGap(107, 107, 107)))
+                .addGap(6, 6, 6))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(145, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(baseUrlLabel))
+                    .addComponent(baseUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(pathLabel))
+                    .addComponent(path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(methodLabel))
+                    .addComponent(methodDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(nameLabel))
+                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(headersJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addComponent(addHeaderBtn)
                         .addGap(18, 18, 18)
-                        .addComponent(deleteHeaderBtn)
-                        .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(headersJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addComponent(deleteHeaderBtn)))
+                .addGap(6, 6, 6)
+                .addComponent(jsonTextLabel)
+                .addGap(6, 6, 6)
+                .addComponent(jsonScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        if(baseUrl.getText().isBlank() && methodDropDown.getSelectedItem()==null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount()==0 && jsonrequestBody.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "There is no value present");
+            return;
+        }
+        int resetConfirm = JOptionPane.showConfirmDialog(null,"Are you sure want to reset ?", "Rest", JOptionPane.YES_NO_OPTION);
+        if(resetConfirm==0){
+            baseUrl.setText("");
+            methodDropDown.setSelectedIndex(0);
+            name.setText("");
+            path.setText("");
+            jsonrequestBody.setText("");
+            DefaultTableModel model = tableModel;
+            model.setRowCount(0);
+        }
+    }//GEN-LAST:event_resetBtnActionPerformed
 
     private static void extractFieldsAndValues(Object requestObject, String path) {
         if (requestObject instanceof JSONObject jsonObject) {
@@ -228,20 +307,21 @@ public class Screen1 extends javax.swing.JFrame {
 
 
     private void SubmitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBtnActionPerformed
+        String baseUrlInput = baseUrl.getText();
+        String methodInput = (String) methodDropDown.getSelectedItem();
+        String nameInput = name.getText();
+        String pathInput = path.getText();
+        if(baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank() || tableModel.getRowCount()==0){
+            JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         String jsonInput = jsonrequestBody.getText();
         try {
-            // Parse JSON input
             JSONObject jsonObject = new JSONObject(jsonInput);
-
-            // Extract all fields and their values
             jsonFieldsAndValues.clear(); // Clear previous data
             extractFieldsAndValues(jsonObject, "");
-
-            // Validate data and prepare table
             Object[][] tableData = prepareTableData(jsonFieldsAndValues);
-
-            // Pass data to DummyScreen2
-            Screen2 screen2 = new Screen2(tableData);
+            Screen2 screen2 = new Screen2(tableData,baseUrlInput,methodInput,pathInput,nameInput,tableModel);
             screen2.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,6 +339,21 @@ public class Screen1 extends javax.swing.JFrame {
         // TODO add your handling code here:
         deleteSelectedRow();
     }//GEN-LAST:event_deleteHeaderBtnActionPerformed
+
+    private void methodDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodDropDownActionPerformed
+        // TODO add your handling code here:
+        String method = (String) methodDropDown.getSelectedItem();
+        if(method.equalsIgnoreCase("post") || method.equalsIgnoreCase("put") || method.equalsIgnoreCase("patch")){
+            System.out.println("its working");
+            jsonTextLabel.setEnabled(true);
+            jsonScrollPane.setEnabled(true);
+            jsonrequestBody.setEnabled(true);
+        }else{
+            jsonTextLabel.setEnabled(false);
+            jsonScrollPane.setEnabled(false);
+            jsonrequestBody.setEnabled(false);
+        }
+    }//GEN-LAST:event_methodDropDownActionPerformed
 
     public void addHeader(String name, String value) {
         if (tableModel != null) {
@@ -322,48 +417,7 @@ public class Screen1 extends javax.swing.JFrame {
         }
         return false;
     }
-
-//    private static void showHeaderDialog() {
-//        JDialog headersDialog = new JDialog();
-//        headersDialog.setSize(300, 200);
-//        headersDialog.setLayout(new GridLayout(3, 2, 10, 10));
-//        JLabel nameLabel = new JLabel("Name: ");
-//        JTextField nameTextField = new JTextField();
-//        JLabel valueLabel = new JLabel("Value: ");
-//        JTextField valueTextField = new JTextField();
-//
-//        JButton addButton = new JButton("Add");
-//        JButton clearButton = new JButton("Clear");
-//        JButton exitButton = new JButton("Exit");
-//
-//        addButton.addActionListener(e -> {
-//            String name = nameTextField.getText().trim();
-//            String value = valueTextField.getText().trim();
-//            if (!name.isEmpty() && !value.isEmpty()) {
-//                addHeader(name, value);
-//                headersDialog.dispose();
-//            } else {
-//                JOptionPane.showMessageDialog(headersDialog, "Name and value cannot be empty", "Error", JOptionPane.ERROR);
-//            }
-//        });
-//        clearButton.addActionListener(e -> {
-//            nameTextField.setText("");
-//            valueTextField.setText("");
-//
-//            headersDialog.add(nameLabel);
-//            headersDialog.add(nameTextField);
-//            headersDialog.add(valueLabel);
-//            headersDialog.add(valueTextField);
-//            headersDialog.add(new JLabel());
-//            headersDialog.add(new JLabel());
-//            headersDialog.add(addButton);
-//            headersDialog.add(clearButton);
-//            headersDialog.add(exitButton);
-//            headersDialog.setVisible(true);
-//        });
-//    }
-
-
+    
     /**
      * @param args the command line arguments
      */
@@ -410,68 +464,23 @@ public class Screen1 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SubmitBtn;
     private javax.swing.JButton addHeaderBtn;
+    private javax.swing.JTextField baseUrl;
+    private javax.swing.JLabel baseUrlLabel;
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton deleteHeaderBtn;
     private javax.swing.JScrollPane headersJScrollPane;
     private javax.swing.JPanel headersPanel;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jsonScrollPane;
+    private javax.swing.JLabel jsonTextLabel;
     private javax.swing.JTextArea jsonrequestBody;
+    private javax.swing.JComboBox<String> methodDropDown;
+    private javax.swing.JLabel methodLabel;
+    private javax.swing.JTextField name;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField path;
+    private javax.swing.JLabel pathLabel;
+    private javax.swing.JButton resetBtn;
     // End of variables declaration//GEN-END:variables
 
 }
-
-//-------------------changes i have made--------------------------------------------------
-//private void SubmitBtnActionPerformed(java.awt.event.ActionEvent evt) {                                          
-//        String jsonInput = jsonrequestBody.getText();
-//        try {
-//            // Parse JSON input
-//            JSONObject jsonObject = new JSONObject(jsonInput);
-//
-//            // Extract all fields and their values
-//            jsonFieldsAndValues.clear(); // Clear previous data
-//            extractFieldsAndValues(jsonObject, "");
-//
-//            // Validate data and prepare table
-//            Object[][] tableData = validateAndPrepareTableData(jsonFieldsAndValues);
-//
-//            // Pass data to DummyScreen2
-//            Screen2 screen2 = new Screen2(tableData);
-//            screen2.setVisible(true);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Invalid JSON input: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//private static Object[][] validateAndPrepareTableData(Map<String, Object> fieldKeyAndValueMap) {
-//        List<Object[]> tableDataList = new ArrayList<>();
-//
-//        for (Map.Entry<String, Object> entry : fieldKeyAndValueMap.entrySet()) {
-//            String field = entry.getKey();
-//            Object value = entry.getValue();
-//            String dataType = determineDataType(value);
-//
-//            String positiveData = ""; // Default blank
-//            String negativeData = ""; // Default blank
-//            String errorMessage = null; // Default null
-//
-//            if (dataType.equals("Unknown")) {
-//                // Unknown data type: leave fields blank
-//                errorMessage = "Unsupported data type";
-//            } else if (validateDataType(value, dataType)) {
-//                // Valid data type
-//                positiveData = "200";
-//            } else {
-//                // Invalid data type
-//                negativeData = "400";
-//                errorMessage = "Invalid " + dataType + " format";
-//            }
-//
-//            tableDataList.add(new Object[]{field, dataType, positiveData, negativeData, errorMessage});
-//        }
-//
-//        return tableDataList.toArray(new Object[0][]);
-//    }
