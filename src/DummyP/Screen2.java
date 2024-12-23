@@ -6,6 +6,7 @@ package DummyP;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -18,9 +19,12 @@ public class Screen2 extends javax.swing.JFrame {
     /**
      * Creates new form Screen2
      */
-    public Screen2(){}
-    
-    public Screen2(Object[][] tableData,String baseUrl,String method,String path,String name,DefaultTableModel headersTableModel) {
+    public Screen2() {
+        initComponents();
+        setupFrame();
+    }
+
+    public Screen2(Object[][] tableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
         //Ensure all the rows in the datatype column have "String" by default.
         for (Object[] row : tableData) {
             if (row[1] == "String") {
@@ -28,6 +32,7 @@ public class Screen2 extends javax.swing.JFrame {
             }
         }
         initComponents();
+        setupFrame();
 
         table.setModel(new DefaultTableModel(tableData, new String[]{
             "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
@@ -41,16 +46,27 @@ public class Screen2 extends javax.swing.JFrame {
                 return types[columnIndex];
             }
 
-@Override
+            @Override
 
             public boolean isCellEditable(int row, int column) {
 
                 return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
 
             }
-   
         });
         customizeTable();
+        // Set URL and method in text fields
+        urlTxtField.setText("URL: " + baseUrl);
+        methodTxtField.setText("METHOD: " + method);
+        // If there's any further custom data to display, you can add it here.
+        headersTxtArea.setText("HEADERS : " + headersTableModel.toString()); // Just an example, adjust this as per your needs
+    }
+
+    // to ensure the frame opens maximized, Allow resizing, and set a default close operation
+    private void setupFrame() {
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void customizeTable() {
@@ -79,12 +95,12 @@ public class Screen2 extends javax.swing.JFrame {
         exitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        headersTxtArea = new javax.swing.JTextArea();
+        urlTxtField = new javax.swing.JTextField();
+        methodTxtField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(595, 434));
+setPreferredSize(new java.awt.Dimension(595, 434));
 
         table.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -127,20 +143,20 @@ public class Screen2 extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Request Field Data and Validations ");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextArea1.setRows(5);
-        jTextArea1.setText("HEADERS : ");
-        jScrollPane2.setViewportView(jTextArea1);
+        headersTxtArea.setColumns(20);
+        headersTxtArea.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        headersTxtArea.setRows(5);
+        headersTxtArea.setText("HEADERS : ");
+        jScrollPane2.setViewportView(headersTxtArea);
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField1.setText("URL : ");
+        urlTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        urlTxtField.setText("URL : ");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField2.setText("METHOD : ");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        methodTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        methodTxtField.setText("METHOD : ");
+        methodTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                methodTxtFieldActionPerformed(evt);
             }
         });
 
@@ -149,38 +165,34 @@ public class Screen2 extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(78, 78, 78)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
                         .addComponent(executeTestsButton)
-                        .addGap(45, 45, 45)
+                        .addGap(53, 53, 53)
                         .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(urlTxtField, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
+                        .addComponent(methodTxtField, javax.swing.GroupLayout.Alignment.LEADING)))
+                .addContainerGap(246, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(urlTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(methodTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(executeTestsButton)
                     .addComponent(exitButton))
@@ -194,7 +206,7 @@ public class Screen2 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,9 +218,9 @@ public class Screen2 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void methodTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodTxtFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_methodTxtFieldActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         // TODO add your handling code here:
@@ -224,7 +236,7 @@ public class Screen2 extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         Object[][] tableData = {
-           {"Field1", "String", "123", "", ""},
+            {"Field1", "String", "123", "", ""},
             {"Field2", "String", "abc", "", ""},
             {"Field3", "String", "", "", ""}
         };
@@ -256,21 +268,21 @@ public class Screen2 extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Screen2().setVisible(true);
+            new Screen2(tableData, "http://example.com", "GET", "/path", "name", null).setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton executeTestsButton;
     private javax.swing.JButton exitButton;
+    private javax.swing.JTextArea headersTxtArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField methodTxtField;
     private javax.swing.JTable table;
+    private javax.swing.JTextField urlTxtField;
     // End of variables declaration//GEN-END:variables
 
 }
