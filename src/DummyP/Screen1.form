@@ -182,7 +182,7 @@
             <Property name="rows" type="int" value="5"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextArea" name="jsonrequestBody">
+        <Component class="javax.swing.JTextArea" name="jsonrequestBody1">
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
