@@ -24,44 +24,47 @@ public class Screen2 extends javax.swing.JFrame {
         setupFrame();
     }
 
-    public Screen2(Object[][] tableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
+    public Screen2(Object[][] jsonRequestBodyTableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
         //Ensure all the rows in the datatype column have "String" by default.
-        for (Object[] row : tableData) {
-            if (row[1] == "String") {
-                row[1] = "String";
-            }
-        }
-        initComponents();
-        setupFrame();
-
-        table.setModel(new DefaultTableModel(tableData, new String[]{
-            "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
-        }) {
-            Class[] types = new Class[]{
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
-            };
-
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
-
-            @Override
-
-            public boolean isCellEditable(int row, int column) {
-
-                return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
-
-            }
-        });
-        customizeTable();
+//        for (Object[] row : jsonRequestBodyTableData) {
+//            if (row[1] == "String") {
+//                row[1] = "String";
+//            }
+//        }
+//        initComponents();
+//        setupFrame();
+//
+//        jsonTable.setModel(new DefaultTableModel(jsonRequestBodyTableData, new String[]{
+//            "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
+//        }) {
+//            Class[] types = new Class[]{
+//                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+//            };
+//
+//            @Override
+//            public Class getColumnClass(int columnIndex) {
+//                return types[columnIndex];
+//            }
+//
+//            @Override
+//
+//            public boolean isCellEditable(int row, int column) {
+//
+//                return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
+//
+//            }
+//        });
+//        customizeTable();
         // Set URL and method in text fields
-        urlTxtField.setText("URL: " + baseUrl);
-        methodTxtField.setText("METHOD: " + method);
+        urlTextField.setText(baseUrl);
+        methodTextField.setText("METHOD: " + method);
         // If there's any further custom data to display, you can add it here.
-        headersTxtArea.setText("HEADERS : " + headersTableModel.toString()); // Just an example, adjust this as per your needs
+        headersTextArea.setText("HEADERS : " + headersTableModel.toString()); // Just an example, adjust this as per your needs
     }
 
+    private void convertTableToJson(){
+        
+    }
     // to ensure the frame opens maximized, Allow resizing, and set a default close operation
     private void setupFrame() {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -72,7 +75,7 @@ public class Screen2 extends javax.swing.JFrame {
     private void customizeTable() {
 
         // Get the "Data Type" column (index 1)
-        TableColumn dataTypeColumn = table.getColumnModel().getColumn(1);
+        TableColumn dataTypeColumn = jsonTable.getColumnModel().getColumn(1);
         // Create a combo box with options
         JComboBox<String> comboBox = new JComboBox<>(new String[]{"Integer", "Boolean", "String"});
         // Set the combo box as the editor for the column
@@ -88,116 +91,65 @@ public class Screen2 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
-        executeTestsButton = new javax.swing.JButton();
-        exitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        headersTxtArea = new javax.swing.JTextArea();
-        urlTxtField = new javax.swing.JTextField();
-        methodTxtField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        urlTextField = new javax.swing.JTextField();
+        methodTextField = new javax.swing.JTextField();
+        headersScrollPane = new javax.swing.JScrollPane();
+        headersTextArea = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
+        tableScrollPane = new javax.swing.JScrollPane();
+        jsonTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-setPreferredSize(new java.awt.Dimension(595, 434));
+        setPreferredSize(new java.awt.Dimension(595, 434));
 
-        table.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("URL");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setText("Method");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setText("Headers");
+
+        urlTextField.setText("URL");
+
+        methodTextField.setText("Method");
+        methodTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                methodTextFieldActionPerformed(evt);
+            }
+        });
+
+        headersTextArea.setColumns(20);
+        headersTextArea.setRows(5);
+        headersScrollPane.setViewportView(headersTextArea);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setText("Request Field Data and Validations");
+
+        jsonTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
-            };
+        ));
+        tableScrollPane.setViewportView(jsonTable);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(table);
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setText("Execute Test");
 
-        executeTestsButton.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        executeTestsButton.setText("Execute Tests");
-        executeTestsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeTestsButtonActionPerformed(evt);
-            }
-        });
-
-        exitButton.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        exitButton.setText("Exit");
-        exitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Request Field Data and Validations ");
-
-        headersTxtArea.setColumns(20);
-        headersTxtArea.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        headersTxtArea.setRows(5);
-        headersTxtArea.setText("HEADERS : ");
-        jScrollPane2.setViewportView(headersTxtArea);
-
-        urlTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        urlTxtField.setText("URL : ");
-
-        methodTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        methodTxtField.setText("METHOD : ");
-        methodTxtField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                methodTxtFieldActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(executeTestsButton)
-                        .addGap(53, 53, 53)
-                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(urlTxtField, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
-                        .addComponent(methodTxtField, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(246, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(urlTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(methodTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(executeTestsButton)
-                    .addComponent(exitButton))
-                .addGap(19, 19, 19))
-        );
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setText("Exit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,31 +157,60 @@ setPreferredSize(new java.awt.Dimension(595, 434));
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(urlTextField)
+                            .addComponent(methodTextField)
+                            .addComponent(headersScrollPane)))
+                    .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(urlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(methodTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(headersScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void methodTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodTxtFieldActionPerformed
+    private void methodTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_methodTxtFieldActionPerformed
-
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_exitButtonActionPerformed
-
-    private void executeTestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTestsButtonActionPerformed
-
-    }//GEN-LAST:event_executeTestsButtonActionPerformed
+    }//GEN-LAST:event_methodTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,16 +254,18 @@ setPreferredSize(new java.awt.Dimension(595, 434));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton executeTestsButton;
-    private javax.swing.JButton exitButton;
-    private javax.swing.JTextArea headersTxtArea;
+    private javax.swing.JScrollPane headersScrollPane;
+    private javax.swing.JTextArea headersTextArea;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField methodTxtField;
-    private javax.swing.JTable table;
-    private javax.swing.JTextField urlTxtField;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JTable jsonTable;
+    private javax.swing.JTextField methodTextField;
+    private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JTextField urlTextField;
     // End of variables declaration//GEN-END:variables
 
 }
