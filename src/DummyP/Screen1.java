@@ -84,7 +84,7 @@ public class Screen1 extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jsonScrollPane = new javax.swing.JScrollPane();
         jsonrequestBody = new javax.swing.JTextArea();
-        jsonrequestBody = new javax.swing.JTextArea();
+        jsonrequestBody1 = new javax.swing.JTextArea();
         jsonTextLabel = new javax.swing.JLabel();
         deleteHeaderBtn = new javax.swing.JButton();
         addHeaderBtn = new javax.swing.JButton();
@@ -130,9 +130,9 @@ public class Screen1 extends javax.swing.JFrame {
         jsonrequestBody.setRows(5);
         jsonScrollPane.setViewportView(jsonrequestBody);
 
-        jsonrequestBody.setColumns(20);
-        jsonrequestBody.setRows(5);
-        jsonScrollPane.setViewportView(jsonrequestBody);
+        jsonrequestBody1.setColumns(20);
+        jsonrequestBody1.setRows(5);
+        jsonScrollPane.setViewportView(jsonrequestBody1);
 
         jsonTextLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jsonTextLabel.setText("Enter Json Request Body");
@@ -311,21 +311,26 @@ public class Screen1 extends javax.swing.JFrame {
         String methodInput = (String) methodDropDown.getSelectedItem();
         String nameInput = name.getText();
         String pathInput = path.getText();
-        if(baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank() || tableModel.getRowCount()==0){
+        Object[][] jsonRequestBodyTableData;
+        if(baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank()){
             JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
             return;
         }
         String jsonInput = jsonrequestBody.getText();
         try {
-            JSONObject jsonObject = new JSONObject(jsonInput);
-            jsonFieldsAndValues.clear(); // Clear previous data
-            extractFieldsAndValues(jsonObject, "");
-            Object[][] tableData = prepareTableData(jsonFieldsAndValues);
-            Screen2 screen2 = new Screen2(tableData,baseUrlInput,methodInput,pathInput,nameInput,tableModel);
+            if(methodInput.equalsIgnoreCase("post") || methodInput.equalsIgnoreCase("put") || methodInput.equalsIgnoreCase("patch")){
+                JSONObject jsonObject = new JSONObject(jsonInput);
+                jsonFieldsAndValues.clear(); // Clear previous data
+                extractFieldsAndValues(jsonObject, "");
+               jsonRequestBodyTableData = prepareTableData(jsonFieldsAndValues);
+            }else{
+                jsonRequestBodyTableData = null;
+            }
+            Screen2 screen2 = new Screen2(jsonRequestBodyTableData,baseUrlInput,methodInput,pathInput,nameInput,tableModel);
             screen2.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Invalid JSON input: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_SubmitBtnActionPerformed
 
@@ -474,6 +479,7 @@ public class Screen1 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jsonScrollPane;
     private javax.swing.JLabel jsonTextLabel;
     private javax.swing.JTextArea jsonrequestBody;
+    private javax.swing.JTextArea jsonrequestBody1;
     private javax.swing.JComboBox<String> methodDropDown;
     private javax.swing.JLabel methodLabel;
     private javax.swing.JTextField name;
