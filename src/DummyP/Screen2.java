@@ -23,53 +23,64 @@ public class Screen2 extends javax.swing.JFrame {
         initComponents();
         setupFrame();
     }
-
+    
     public Screen2(Object[][] jsonRequestBodyTableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
         initComponents();
         setupFrame();
-        if(jsonRequestBodyTableData!=null){
+        if (jsonRequestBodyTableData != null) {
             for (Object[] row : jsonRequestBodyTableData) {
-            if (row[1] == "String") {
-                row[1] = "String";
+                if (row[1] == "String") {
+                    row[1] = "String";
+                }
             }
+            jsonTable.setModel(new DefaultTableModel(jsonRequestBodyTableData, new String[]{
+                "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
+            }) {
+                Class[] types = new Class[]{
+                    java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                };
+                
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+                
+                @Override
+                
+                public boolean isCellEditable(int row, int column) {
+                    
+                    return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
+
+                }
+            });
+            customizeTable();
         }
-        jsonTable.setModel(new DefaultTableModel(jsonRequestBodyTableData, new String[]{
-            "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
-        }) {
-            Class[] types = new Class[]{
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
-            };
-
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
-
-            @Override
-
-            public boolean isCellEditable(int row, int column) {
-
-                return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
-
-            }
-        });
-        customizeTable();
-        }
+        
         urlTextField.setText(baseUrl);
         methodTextField.setText(method.toUpperCase());
-        // If there's any further custom data to display, you can add it here.
-        headersTextArea.setText("HEADERS : " + headersTableModel.toString()); // Just an example, adjust this as per your needs
+        if (headersTableModel != null) {
+            StringBuilder headersText = new StringBuilder();
+            for (int i = 0; i < headersTableModel.getRowCount(); i++) {
+                String headerName = (String) headersTableModel.getValueAt(i, 0);
+                String headerValue = (String) headersTableModel.getValueAt(i, 1);
+                headersText.append(headerName).append(": ").append(headerValue).append("\n");
+            }
+            headersTextArea.setText(headersText.toString());
+        } else {
+            headersTextArea.setText("No headers Available");
+        }
     }
-
-    private void convertTableToJson(){
+    
+    private void convertTableToJson() {
         
     }
+
     // to ensure the frame opens maximized, Allow resizing, and set a default close operation
     private void setupFrame() {
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
+    
     private void customizeTable() {
 
         // Get the "Data Type" column (index 1)
