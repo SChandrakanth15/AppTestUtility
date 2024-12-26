@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * @author sambit.sahu
  */
 public class Screen1 extends javax.swing.JFrame {
-    
+
     private DefaultTableModel tableModel;
     private JTable headersTable;
 
@@ -40,34 +40,34 @@ public class Screen1 extends javax.swing.JFrame {
     }
 
     private void setUpHeaderComponents() {
-    // Initialize table model and table
-    String[] columnNames = {"Header Name", "Header Value"};
-    tableModel = new DefaultTableModel(columnNames, 0);
-    headersTable = new JTable(tableModel);
-    
-    JScrollPane scrollPane = new JScrollPane(headersTable);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(400,150));
-    if (headersPanel != null) {
-        headersPanel.removeAll(); // Clear any existing content
-        headersPanel.setLayout(new BorderLayout());
-        headersPanel.add(scrollPane,BorderLayout.CENTER);
-        // Revalidate and repaint headersPanel
-        headersPanel.revalidate();
-        headersPanel.repaint();
-    }
-}
-    
-    private void deleteSelectedRow() {
-       int selectedRow = headersTable.getSelectedRow();
-    if (selectedRow != -1) {
-        tableModel.removeRow(selectedRow);
-    } else {
-        JOptionPane.showMessageDialog(this, "Please select a row to delete.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+        // Initialize table model and table
+        String[] columnNames = {"Header Name", "Header Value"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        headersTable = new JTable(tableModel);
+
+        JScrollPane scrollPane = new JScrollPane(headersTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(400, 150));
+        if (headersPanel != null) {
+            headersPanel.removeAll(); // Clear any existing content
+            headersPanel.setLayout(new BorderLayout());
+            headersPanel.add(scrollPane, BorderLayout.CENTER);
+            // Revalidate and repaint headersPanel
+            headersPanel.revalidate();
+            headersPanel.repaint();
         }
     }
-    
+
+    private void deleteSelectedRow() {
+        int selectedRow = headersTable.getSelectedRow();
+        if (selectedRow != -1) {
+            tableModel.removeRow(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to delete.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     private static final Map<String, Object> jsonFieldsAndValues = new LinkedHashMap<>();
 
     /**
@@ -262,12 +262,12 @@ public class Screen1 extends javax.swing.JFrame {
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         // TODO add your handling code here:
-        if(baseUrl.getText().isBlank() && methodDropDown.getSelectedItem()==null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount()==0 && jsonrequestBody1.getText().isBlank()){
+        if (baseUrl.getText().isBlank() && methodDropDown.getSelectedItem() == null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount() == 0 && jsonrequestBody1.getText().isBlank()) {
             JOptionPane.showMessageDialog(null, "There is no value present");
             return;
         }
-        int resetConfirm = JOptionPane.showConfirmDialog(null,"Are you sure want to reset ?", "Rest", JOptionPane.YES_NO_OPTION);
-        if(resetConfirm==0){
+        int resetConfirm = JOptionPane.showConfirmDialog(null, "Are you sure want to reset ?", "Rest", JOptionPane.YES_NO_OPTION);
+        if (resetConfirm == 0) {
             baseUrl.setText("");
             methodDropDown.setSelectedIndex(0);
             name.setText("");
@@ -313,21 +313,21 @@ public class Screen1 extends javax.swing.JFrame {
         String nameInput = name.getText();
         String pathInput = path.getText();
         Object[][] jsonRequestBodyTableData;
-        if(baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank()){
-            JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
+        if (baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank()) {
+            JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             return;
         }
         String jsonInput = jsonrequestBody1.getText();
         try {
-            if(methodInput.equalsIgnoreCase("post") || methodInput.equalsIgnoreCase("put") || methodInput.equalsIgnoreCase("patch")){
+            if (methodInput.equalsIgnoreCase("post") || methodInput.equalsIgnoreCase("put") || methodInput.equalsIgnoreCase("patch")) {
                 JSONObject jsonObject = new JSONObject(jsonInput);
                 jsonFieldsAndValues.clear(); // Clear previous data
                 extractFieldsAndValues(jsonObject, "");
-               jsonRequestBodyTableData = prepareTableData(jsonFieldsAndValues);
-            }else{
+                jsonRequestBodyTableData = prepareTableData(jsonFieldsAndValues);
+            } else {
                 jsonRequestBodyTableData = null;
             }
-            Screen2 screen2 = new Screen2(jsonRequestBodyTableData,baseUrlInput,methodInput,pathInput,nameInput,tableModel);
+            Screen2 screen2 = new Screen2(jsonRequestBodyTableData, baseUrlInput, methodInput, pathInput, nameInput, tableModel);
             screen2.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,12 +349,12 @@ public class Screen1 extends javax.swing.JFrame {
     private void methodDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodDropDownActionPerformed
         // TODO add your handling code here:
         String method = (String) methodDropDown.getSelectedItem();
-        if(method.equalsIgnoreCase("post") || method.equalsIgnoreCase("put") || method.equalsIgnoreCase("patch")){
+        if (method.equalsIgnoreCase("post") || method.equalsIgnoreCase("put") || method.equalsIgnoreCase("patch")) {
             System.out.println("its working");
             jsonTextLabel.setEnabled(true);
             jsonScrollPane.setEnabled(true);
             jsonrequestBody1.setEnabled(true);
-        }else{
+        } else {
             jsonTextLabel.setEnabled(false);
             jsonScrollPane.setEnabled(false);
             jsonrequestBody1.setEnabled(false);
@@ -363,7 +363,7 @@ public class Screen1 extends javax.swing.JFrame {
 
     public void addHeader(String name, String value) {
         if (tableModel != null) {
-        tableModel.addRow(new Object[]{name, value});
+            tableModel.addRow(new Object[]{name, value});
         }
     }
 
@@ -423,7 +423,7 @@ public class Screen1 extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
     /**
      * @param args the command line arguments
      */
