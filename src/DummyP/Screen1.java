@@ -35,6 +35,7 @@ public class Screen1 extends javax.swing.JFrame {
         setUpHeaderComponents();
         jsonScrollPane.setEnabled(false);
         jsonrequestBody.setEnabled(false);
+        jsonrequestBody1.setEnabled(false);
         jsonTextLabel.setEnabled(false);
     }
 
@@ -261,7 +262,7 @@ public class Screen1 extends javax.swing.JFrame {
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         // TODO add your handling code here:
-        if(baseUrl.getText().isBlank() && methodDropDown.getSelectedItem()==null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount()==0 && jsonrequestBody.getText().isBlank()){
+        if(baseUrl.getText().isBlank() && methodDropDown.getSelectedItem()==null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount()==0 && jsonrequestBody1.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "There is no value present");
             return;
         }
@@ -271,7 +272,7 @@ public class Screen1 extends javax.swing.JFrame {
             methodDropDown.setSelectedIndex(0);
             name.setText("");
             path.setText("");
-            jsonrequestBody.setText("");
+            jsonrequestBody1.setText("");
             DefaultTableModel model = tableModel;
             model.setRowCount(0);
         }
@@ -316,7 +317,7 @@ public class Screen1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String jsonInput = jsonrequestBody.getText();
+        String jsonInput = jsonrequestBody1.getText();
         try {
             if(methodInput.equalsIgnoreCase("post") || methodInput.equalsIgnoreCase("put") || methodInput.equalsIgnoreCase("patch")){
                 JSONObject jsonObject = new JSONObject(jsonInput);
@@ -352,11 +353,11 @@ public class Screen1 extends javax.swing.JFrame {
             System.out.println("its working");
             jsonTextLabel.setEnabled(true);
             jsonScrollPane.setEnabled(true);
-            jsonrequestBody.setEnabled(true);
+            jsonrequestBody1.setEnabled(true);
         }else{
             jsonTextLabel.setEnabled(false);
             jsonScrollPane.setEnabled(false);
-            jsonrequestBody.setEnabled(false);
+            jsonrequestBody1.setEnabled(false);
         }
     }//GEN-LAST:event_methodDropDownActionPerformed
 

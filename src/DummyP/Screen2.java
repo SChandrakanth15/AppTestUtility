@@ -25,39 +25,38 @@ public class Screen2 extends javax.swing.JFrame {
     }
 
     public Screen2(Object[][] jsonRequestBodyTableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
-        //Ensure all the rows in the datatype column have "String" by default.
-//        for (Object[] row : jsonRequestBodyTableData) {
-//            if (row[1] == "String") {
-//                row[1] = "String";
-//            }
-//        }
-//        initComponents();
-//        setupFrame();
-//
-//        jsonTable.setModel(new DefaultTableModel(jsonRequestBodyTableData, new String[]{
-//            "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
-//        }) {
-//            Class[] types = new Class[]{
-//                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
-//            };
-//
-//            @Override
-//            public Class getColumnClass(int columnIndex) {
-//                return types[columnIndex];
-//            }
-//
-//            @Override
-//
-//            public boolean isCellEditable(int row, int column) {
-//
-//                return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
-//
-//            }
-//        });
-//        customizeTable();
-        // Set URL and method in text fields
+        initComponents();
+        setupFrame();
+        if(jsonRequestBodyTableData!=null){
+            for (Object[] row : jsonRequestBodyTableData) {
+            if (row[1] == "String") {
+                row[1] = "String";
+            }
+        }
+        jsonTable.setModel(new DefaultTableModel(jsonRequestBodyTableData, new String[]{
+            "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
+        }) {
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            @Override
+
+            public boolean isCellEditable(int row, int column) {
+
+                return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
+
+            }
+        });
+        customizeTable();
+        }
         urlTextField.setText(baseUrl);
-        methodTextField.setText("METHOD: " + method);
+        methodTextField.setText(method.toUpperCase());
         // If there's any further custom data to display, you can add it here.
         headersTextArea.setText("HEADERS : " + headersTableModel.toString()); // Just an example, adjust this as per your needs
     }
@@ -67,7 +66,6 @@ public class Screen2 extends javax.swing.JFrame {
     }
     // to ensure the frame opens maximized, Allow resizing, and set a default close operation
     private void setupFrame() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -105,7 +103,6 @@ public class Screen2 extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(595, 434));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("URL");
@@ -134,13 +131,13 @@ public class Screen2 extends javax.swing.JFrame {
 
         jsonTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Field", "Datatype", "Positive Data", "Negative Data", "Error Message"
             }
         ));
         tableScrollPane.setViewportView(jsonTable);
@@ -168,7 +165,7 @@ public class Screen2 extends javax.swing.JFrame {
                             .addComponent(urlTextField)
                             .addComponent(methodTextField)
                             .addComponent(headersScrollPane)))
-                    .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                    .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -193,11 +190,11 @@ public class Screen2 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(headersScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
+                    .addComponent(headersScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
