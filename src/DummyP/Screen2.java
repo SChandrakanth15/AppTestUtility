@@ -7,6 +7,8 @@ package DummyP;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -26,7 +28,7 @@ public class Screen2 extends javax.swing.JFrame {
         initComponents();
         setupFrame();
     }
-    
+
     public Screen2(Object[][] jsonRequestBodyTableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
         initComponents();
         setupFrame();
@@ -42,21 +44,23 @@ public class Screen2 extends javax.swing.JFrame {
                 Class[] types = new Class[]{
                     java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
                 };
+              
                 @Override
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
                 }
-                @Override                
+                @Override   
                 public boolean isCellEditable(int row, int column) {
-                    
+
                     return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
                 }
             });
-            customizeTable(); 
-        } 
+            customizeTable();
+        }
         urlTextField.setText(baseUrl);
         methodTextField.setText(method.toUpperCase());
-        if (headersTableModel != null) {
+        //  to display the Headers in Screen 2.
+        if (headersTableModel.getRowCount() != 0) {
             StringBuilder headersText = new StringBuilder();
             for (int i = 0; i < headersTableModel.getRowCount(); i++) {
                 String headerName = (String) headersTableModel.getValueAt(i, 0);
@@ -65,7 +69,7 @@ public class Screen2 extends javax.swing.JFrame {
             }
             headersTextArea.setText(headersText.toString());
         } else {
-            headersTextArea.setText("No headers Available");
+            headersTextArea.setText("Headers not available");
         }
     }
     
@@ -155,7 +159,7 @@ public class Screen2 extends javax.swing.JFrame {
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     private void customizeTable() {
 
         // Get the "Data Type" column (index 1)
@@ -208,6 +212,7 @@ public class Screen2 extends javax.swing.JFrame {
             }
         });
 
+        headersTextArea.setEditable(false);
         headersTextArea.setColumns(20);
         headersTextArea.setRows(5);
         headersScrollPane.setViewportView(headersTextArea);

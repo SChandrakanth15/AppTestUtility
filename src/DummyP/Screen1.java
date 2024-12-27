@@ -350,7 +350,6 @@ public class Screen1 extends javax.swing.JFrame {
         // TODO add your handling code here:
         String method = (String) methodDropDown.getSelectedItem();
         if (method.equalsIgnoreCase("post") || method.equalsIgnoreCase("put") || method.equalsIgnoreCase("patch")) {
-            System.out.println("its working");
             jsonTextLabel.setEnabled(true);
             jsonScrollPane.setEnabled(true);
             jsonrequestBody1.setEnabled(true);
