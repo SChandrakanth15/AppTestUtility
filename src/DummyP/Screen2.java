@@ -7,6 +7,7 @@ package DummyP;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.json.JSONArray;
@@ -17,8 +18,6 @@ import org.json.JSONObject;
  * @author chandrakanth.shaji
  */
 public class Screen2 extends javax.swing.JFrame {
-    
-    private Object[][] jsonRequestBodyTableData;
 
     /**
      * Creates new form Screen2
@@ -32,7 +31,6 @@ public class Screen2 extends javax.swing.JFrame {
         initComponents();
         setupFrame();
         if (jsonRequestBodyTableData != null) {
-            this.jsonRequestBodyTableData = jsonRequestBodyTableData;
             for (Object[] row : jsonRequestBodyTableData) {
                 if (row[1] == "String") {
                     row[1] = "String";
@@ -44,23 +42,18 @@ public class Screen2 extends javax.swing.JFrame {
                 Class[] types = new Class[]{
                     java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
                 };
-                
                 @Override
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
                 }
-                
-                @Override
-                
+                @Override                
                 public boolean isCellEditable(int row, int column) {
                     
                     return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
-
                 }
             });
-            customizeTable();
-        }
-        
+            customizeTable(); 
+        } 
         urlTextField.setText(baseUrl);
         methodTextField.setText(method.toUpperCase());
         if (headersTableModel != null) {
@@ -78,7 +71,6 @@ public class Screen2 extends javax.swing.JFrame {
     
     private JSONObject convertTableToJson(Object[][] jsonRequestBodyTableData) {
         JSONObject rootJson = new JSONObject(); // Root JSON object
-
         for (Object[] row : jsonRequestBodyTableData) {
             String field = (String) row[0];  // Field name (e.g., "customErrors[0].customErrorText")
             String dataType = (String) row[1];  // Data type (e.g., "String")
@@ -116,20 +108,46 @@ public class Screen2 extends javax.swing.JFrame {
                     currentJson = currentJson.getJSONObject(key); // Move to the nested object
                 }
             }
-
-            // Add the final key-value pair
             String finalKey = keys[keys.length - 1];
             if (dataType.equalsIgnoreCase("String")) {
-                currentJson.put(finalKey, (String) data);
-            } else if (dataType.equalsIgnoreCase("Number")) {
-                currentJson.put(finalKey, Integer.parseInt(data.toString()));
+                currentJson.put(finalKey, data.toString());
+            }  else if (dataType.equalsIgnoreCase("Integer")) {
+            // Handle both integer and floating-point numbers
+                if (data instanceof Integer) {
+                    currentJson.put(finalKey, data);
+                } else if (data.toString().contains(".")) {
+                    currentJson.put(finalKey, Double.parseDouble(data.toString().trim()));
+                } else {
+                    currentJson.put(finalKey, Integer.parseInt(data.toString().trim()));
+                }
             } else if (dataType.equalsIgnoreCase("Boolean")) {
-                currentJson.put(finalKey, Boolean.parseBoolean(data.toString()));
+            // Handle Boolean
+                if (data instanceof Boolean) {
+                    currentJson.put(finalKey, data);
+                } else {
+                    currentJson.put(finalKey, Boolean.parseBoolean(data.toString().trim().toLowerCase()));
+                }
             } else {
                 currentJson.put(finalKey, data.toString()); // Default to String if unrecognized
             }
         }
        return rootJson;    
+    }
+    
+    private static Object[][] extractTableData(JTable table) {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        int rowCount = model.getRowCount();
+        int colCount = model.getColumnCount();
+
+        Object[][] data = new Object[rowCount][colCount];
+
+        // Extract data from the table model
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                data[row][col] = model.getValueAt(row, col);
+            }
+        }
+        return data;
     }
 
     // to ensure the frame opens maximized, Allow resizing, and set a default close operation
@@ -208,6 +226,11 @@ public class Screen2 extends javax.swing.JFrame {
                 "Field", "Datatype", "Positive Data", "Negative Data", "Error Message"
             }
         ));
+        jsonTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jsonTablePropertyChange(evt);
+            }
+        });
         tableScrollPane.setViewportView(jsonTable);
 
         executeTestbtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -284,8 +307,14 @@ public class Screen2 extends javax.swing.JFrame {
 
     private void executeTestbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTestbtnActionPerformed
         // TODO add your handling code here:
-       JSONObject requestBodyJsonObject = convertTableToJson(this.jsonRequestBodyTableData);
+        Object[][] requestJson = extractTableData(jsonTable);
+        JSONObject requestBodyJsonObject = convertTableToJson(requestJson);
+        System.out.println(requestBodyJsonObject);
     }//GEN-LAST:event_executeTestbtnActionPerformed
+
+    private void jsonTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jsonTablePropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jsonTablePropertyChange
 
     /**
      * @param args the command line arguments
