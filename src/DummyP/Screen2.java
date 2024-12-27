@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -42,23 +44,19 @@ public class Screen2 extends javax.swing.JFrame {
                 Class[] types = new Class[]{
                     java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
                 };
-
+              
                 @Override
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
                 }
-
-                @Override
-
+                @Override   
                 public boolean isCellEditable(int row, int column) {
 
                     return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
-
                 }
             });
             customizeTable();
         }
-
         urlTextField.setText(baseUrl);
         methodTextField.setText(method.toUpperCase());
         //  to display the Headers in Screen 2.
@@ -74,9 +72,86 @@ public class Screen2 extends javax.swing.JFrame {
             headersTextArea.setText("Headers not available");
         }
     }
+    
+    private JSONObject convertTableToJson(Object[][] jsonRequestBodyTableData) {
+        JSONObject rootJson = new JSONObject(); // Root JSON object
+        for (Object[] row : jsonRequestBodyTableData) {
+            String field = (String) row[0];  // Field name (e.g., "customErrors[0].customErrorText")
+            String dataType = (String) row[1];  // Data type (e.g., "String")
+            Object data = row[2];  // Data (can be any type)
 
-    private void convertTableToJson() {
+            // Split field by dot notation to find the hierarchy
+            String[] keys = field.split("\\.");
 
+            JSONObject currentJson = rootJson; // Start at the root
+            for (int i = 0; i < keys.length - 1; i++) {
+                String key = keys[i];
+
+                // Check if it's an array (e.g., "customErrors[0]")
+                if (key.matches(".*\\[\\d+\\]")) {
+                    String arrayName = key.substring(0, key.indexOf("["));
+                    int index = Integer.parseInt(key.substring(key.indexOf("[") + 1, key.indexOf("]")));
+
+                    // Create or retrieve the JSONArray
+                    if (!currentJson.has(arrayName)) {
+                        currentJson.put(arrayName, new JSONArray());
+                    }
+                    JSONArray jsonArray = currentJson.getJSONArray(arrayName);
+
+                    // Ensure the array has enough elements
+                    while (jsonArray.length() <= index) {
+                        jsonArray.put(new JSONObject());
+                    }
+
+                    currentJson = jsonArray.getJSONObject(index); // Move to the array element
+                } else {
+                    // Create or retrieve the nested object
+                    if (!currentJson.has(key)) {
+                        currentJson.put(key, new JSONObject());
+                    }
+                    currentJson = currentJson.getJSONObject(key); // Move to the nested object
+                }
+            }
+            String finalKey = keys[keys.length - 1];
+            if (dataType.equalsIgnoreCase("String")) {
+                currentJson.put(finalKey, data.toString());
+            }  else if (dataType.equalsIgnoreCase("Integer")) {
+            // Handle both integer and floating-point numbers
+                if (data instanceof Integer) {
+                    currentJson.put(finalKey, data);
+                } else if (data.toString().contains(".")) {
+                    currentJson.put(finalKey, Double.parseDouble(data.toString().trim()));
+                } else {
+                    currentJson.put(finalKey, Integer.parseInt(data.toString().trim()));
+                }
+            } else if (dataType.equalsIgnoreCase("Boolean")) {
+            // Handle Boolean
+                if (data instanceof Boolean) {
+                    currentJson.put(finalKey, data);
+                } else {
+                    currentJson.put(finalKey, Boolean.parseBoolean(data.toString().trim().toLowerCase()));
+                }
+            } else {
+                currentJson.put(finalKey, data.toString()); // Default to String if unrecognized
+            }
+        }
+       return rootJson;    
+    }
+    
+    private static Object[][] extractTableData(JTable table) {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        int rowCount = model.getRowCount();
+        int colCount = model.getColumnCount();
+
+        Object[][] data = new Object[rowCount][colCount];
+
+        // Extract data from the table model
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                data[row][col] = model.getValueAt(row, col);
+            }
+        }
+        return data;
     }
 
     // to ensure the frame opens maximized, Allow resizing, and set a default close operation
@@ -114,7 +189,7 @@ public class Screen2 extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         tableScrollPane = new javax.swing.JScrollPane();
         jsonTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        executeTestbtn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -156,10 +231,20 @@ public class Screen2 extends javax.swing.JFrame {
                 "Field", "Datatype", "Positive Data", "Negative Data", "Error Message"
             }
         ));
+        jsonTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jsonTablePropertyChange(evt);
+            }
+        });
         tableScrollPane.setViewportView(jsonTable);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Execute Test");
+        executeTestbtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        executeTestbtn.setText("Execute Test");
+        executeTestbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                executeTestbtnActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setText("Exit");
@@ -186,7 +271,7 @@ public class Screen2 extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(executeTestbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -213,7 +298,7 @@ public class Screen2 extends javax.swing.JFrame {
                 .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(executeTestbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
@@ -224,6 +309,17 @@ public class Screen2 extends javax.swing.JFrame {
     private void methodTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_methodTextFieldActionPerformed
+
+    private void executeTestbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTestbtnActionPerformed
+        // TODO add your handling code here:
+        Object[][] requestJson = extractTableData(jsonTable);
+        JSONObject requestBodyJsonObject = convertTableToJson(requestJson);
+        System.out.println(requestBodyJsonObject);
+    }//GEN-LAST:event_executeTestbtnActionPerformed
+
+    private void jsonTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jsonTablePropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jsonTablePropertyChange
 
     /**
      * @param args the command line arguments
@@ -267,9 +363,9 @@ public class Screen2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton executeTestbtn;
     private javax.swing.JScrollPane headersScrollPane;
     private javax.swing.JTextArea headersTextArea;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
