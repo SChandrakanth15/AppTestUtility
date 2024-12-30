@@ -97,7 +97,7 @@ public class Screen1 extends javax.swing.JFrame {
         path = new javax.swing.JTextField();
         methodLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
-        name = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
         methodDropDown = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -201,7 +201,7 @@ public class Screen1 extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(nameLabel)
                                 .addGap(24, 24, 24)
-                                .addComponent(name))
+                                .addComponent(nameField))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(baseUrlLabel)
                                 .addGap(6, 6, 6)
@@ -239,7 +239,7 @@ public class Screen1 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(nameLabel))
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(headersJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
@@ -262,7 +262,7 @@ public class Screen1 extends javax.swing.JFrame {
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         // TODO add your handling code here:
-        if (baseUrl.getText().isBlank() && methodDropDown.getSelectedItem() == null && path.getText().isBlank() && name.getText().isBlank() && tableModel.getRowCount() == 0 && jsonrequestBody1.getText().isBlank()) {
+        if (baseUrl.getText().isBlank() && methodDropDown.getSelectedItem() == null && path.getText().isBlank() && nameField.getText().isBlank() && tableModel.getRowCount() == 0 && jsonrequestBody1.getText().isBlank()) {
             JOptionPane.showMessageDialog(null, "There is no value present");
             return;
         }
@@ -270,7 +270,7 @@ public class Screen1 extends javax.swing.JFrame {
         if (resetConfirm == 0) {
             baseUrl.setText("");
             methodDropDown.setSelectedIndex(0);
-            name.setText("");
+            nameField.setText("");
             path.setText("");
             jsonrequestBody1.setText("");
             DefaultTableModel model = tableModel;
@@ -310,7 +310,7 @@ public class Screen1 extends javax.swing.JFrame {
     private void SubmitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBtnActionPerformed
         String baseUrlInput = baseUrl.getText();
         String methodInput = (String) methodDropDown.getSelectedItem();
-        String nameInput = name.getText();
+        String nameInput = nameField.getText();
         String pathInput = path.getText();
         Object[][] jsonRequestBodyTableData;
         if (baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank()) {
@@ -482,7 +482,7 @@ public class Screen1 extends javax.swing.JFrame {
     private javax.swing.JTextArea jsonrequestBody1;
     private javax.swing.JComboBox<String> methodDropDown;
     private javax.swing.JLabel methodLabel;
-    private javax.swing.JTextField name;
+    private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField path;
     private javax.swing.JLabel pathLabel;
