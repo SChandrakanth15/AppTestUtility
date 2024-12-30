@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -20,6 +21,8 @@ import org.json.JSONObject;
  * @author chandrakanth.shaji
  */
 public class Screen2 extends javax.swing.JFrame {
+
+    private String name;
 
     /**
      * Creates new form Screen2
@@ -30,6 +33,7 @@ public class Screen2 extends javax.swing.JFrame {
     }
 
     public Screen2(Object[][] jsonRequestBodyTableData, String baseUrl, String method, String path, String name, DefaultTableModel headersTableModel) {
+        this.name = name;
         initComponents();
         setupFrame();
         if (jsonRequestBodyTableData != null) {
@@ -44,12 +48,13 @@ public class Screen2 extends javax.swing.JFrame {
                 Class[] types = new Class[]{
                     java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
                 };
-              
+
                 @Override
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
                 }
-                @Override   
+
+                @Override
                 public boolean isCellEditable(int row, int column) {
 
                     return column == 1 || column == 2 || column == 3 || column == 4; // Allow edits for relevant columns
@@ -72,7 +77,7 @@ public class Screen2 extends javax.swing.JFrame {
             headersTextArea.setText("Headers not available");
         }
     }
-    
+
     private JSONObject convertTableToJson(Object[][] jsonRequestBodyTableData) {
         JSONObject rootJson = new JSONObject(); // Root JSON object
         for (Object[] row : jsonRequestBodyTableData) {
@@ -115,8 +120,8 @@ public class Screen2 extends javax.swing.JFrame {
             String finalKey = keys[keys.length - 1];
             if (dataType.equalsIgnoreCase("String")) {
                 currentJson.put(finalKey, data.toString());
-            }  else if (dataType.equalsIgnoreCase("Integer")) {
-            // Handle both integer and floating-point numbers
+            } else if (dataType.equalsIgnoreCase("Integer")) {
+                // Handle both integer and floating-point numbers
                 if (data instanceof Integer) {
                     currentJson.put(finalKey, data);
                 } else if (data.toString().contains(".")) {
@@ -125,7 +130,7 @@ public class Screen2 extends javax.swing.JFrame {
                     currentJson.put(finalKey, Integer.parseInt(data.toString().trim()));
                 }
             } else if (dataType.equalsIgnoreCase("Boolean")) {
-            // Handle Boolean
+                // Handle Boolean
                 if (data instanceof Boolean) {
                     currentJson.put(finalKey, data);
                 } else {
@@ -135,11 +140,11 @@ public class Screen2 extends javax.swing.JFrame {
                 currentJson.put(finalKey, data.toString()); // Default to String if unrecognized
             }
         }
-       return rootJson;    
+        return rootJson;
     }
-    
+
     private static Object[][] extractTableData(JTable table) {
-        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
         int rowCount = model.getRowCount();
         int colCount = model.getColumnCount();
 
@@ -315,6 +320,26 @@ public class Screen2 extends javax.swing.JFrame {
         Object[][] requestJson = extractTableData(jsonTable);
         JSONObject requestBodyJsonObject = convertTableToJson(requestJson);
         System.out.println(requestBodyJsonObject);
+        System.out.println("the length of the json is : " + requestJson.length);
+
+        Object[][] screen3TableData = new Object[requestJson.length][6];
+        for (int i = 0; i < requestJson.length; i++) {
+            String fieldName = (String) requestJson[i][0]; // Assuming [0] is always a String
+            Object testDataObject = requestJson[i][2]; // Positive data
+            String testData = (testDataObject != null) ? testDataObject.toString() : "";
+            String testName = String.format("Verify %s with %s value %s", name, fieldName, testData);
+
+            screen3TableData[i][0] = i + 1; // SL (serial number)
+            screen3TableData[i][1] = testName; // Test Name
+            screen3TableData[i][2] = requestBodyJsonObject;// Req Body (entire JSON)
+            screen3TableData[i][3] = ""; // Res Code (to be filled in Screen3)
+            screen3TableData[i][4] = ""; // Res Body (to be filled in Screen3)
+            screen3TableData[i][5] = ""; // Test Result (to be filled in Screen3)
+        }
+
+        Screen3 screen3 = new Screen3(screen3TableData);
+        screen3.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_executeTestbtnActionPerformed
 
     private void jsonTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jsonTablePropertyChange

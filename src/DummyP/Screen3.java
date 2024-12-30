@@ -4,6 +4,8 @@
  */
 package DummyP;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author chandrakanth.shaji
@@ -16,7 +18,23 @@ public class Screen3 extends javax.swing.JFrame {
     public Screen3() {
         initComponents();
     }
-
+ public Screen3(Object[][] tableData) {
+        initComponents();
+        populateResultTable(tableData);
+    }
+ 
+ private void populateResultTable(Object[][] tableData) {
+        DefaultTableModel model = new DefaultTableModel(
+            tableData,
+            new String[]{"Sl", "Test Name", "Request Body", "Response Code", "Response Body", "Test Result"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return true; // Make the table cells non-editable.
+            }
+        };
+        resultTable.setModel(model);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,17 +44,51 @@ public class Screen3 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultTable = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Results");
+
+        resultTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Sl", "Test Name", "Request Body", "Response Code", "Response Body", "Test Result"
+            }
+        ));
+        jScrollPane1.setViewportView(resultTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 483, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jScrollPane1)))
+                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 441, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addGap(50, 50, 50))
         );
 
         pack();
@@ -78,5 +130,8 @@ public class Screen3 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable resultTable;
     // End of variables declaration//GEN-END:variables
 }
