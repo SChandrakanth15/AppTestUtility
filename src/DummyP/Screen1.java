@@ -6,6 +6,7 @@ package DummyP;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import static java.lang.System.exit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,7 +83,7 @@ public class Screen1 extends javax.swing.JFrame {
         bottomPanel = new javax.swing.JPanel();
         SubmitBtn = new javax.swing.JButton();
         resetBtn = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        exitBtn = new javax.swing.JButton();
         jsonScrollPane = new javax.swing.JScrollPane();
         jsonrequestBody = new javax.swing.JTextArea();
         jsonrequestBody1 = new javax.swing.JTextArea();
@@ -122,10 +123,15 @@ public class Screen1 extends javax.swing.JFrame {
         });
         bottomPanel.add(resetBtn);
 
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton6.setText("Exit");
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        bottomPanel.add(jButton6);
+        exitBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        exitBtn.setText("Exit");
+        exitBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitBtnActionPerformed(evt);
+            }
+        });
+        bottomPanel.add(exitBtn);
 
         jsonrequestBody.setColumns(20);
         jsonrequestBody.setRows(5);
@@ -313,8 +319,20 @@ public class Screen1 extends javax.swing.JFrame {
         String nameInput = nameField.getText();
         String pathInput = path.getText();
         Object[][] jsonRequestBodyTableData;
-        if (baseUrlInput.isBlank() || methodInput.isBlank() || nameInput.isBlank() || pathInput.isBlank()) {
-            JOptionPane.showMessageDialog(this, "All fields are mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+        if (baseUrlInput.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Base URL is mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (methodInput.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Method is mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (nameInput.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Name is mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (pathInput.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Path is mandatory", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             return;
         }
         String jsonInput = jsonrequestBody1.getText();
@@ -327,8 +345,9 @@ public class Screen1 extends javax.swing.JFrame {
             } else {
                 jsonRequestBodyTableData = null;
             }
-            Screen2 screen2 = new Screen2(jsonRequestBodyTableData, baseUrlInput, methodInput, pathInput, nameInput, tableModel);
+            Screen2 screen2 = new Screen2(jsonRequestBodyTableData, baseUrlInput, methodInput, pathInput, nameInput, tableModel,getExtendedState());
             screen2.setVisible(true);
+            setVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -359,6 +378,14 @@ public class Screen1 extends javax.swing.JFrame {
             jsonrequestBody1.setEnabled(false);
         }
     }//GEN-LAST:event_methodDropDownActionPerformed
+
+    private void exitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitBtnActionPerformed
+        // TODO add your handling code here:
+        int confirm = JOptionPane.showConfirmDialog(null,"Are you sure want to exit?");
+        if(confirm==0){
+            exit(0);
+        }
+    }//GEN-LAST:event_exitBtnActionPerformed
 
     public void addHeader(String name, String value) {
         if (tableModel != null) {
@@ -473,9 +500,9 @@ public class Screen1 extends javax.swing.JFrame {
     private javax.swing.JLabel baseUrlLabel;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton deleteHeaderBtn;
+    private javax.swing.JButton exitBtn;
     private javax.swing.JScrollPane headersJScrollPane;
     private javax.swing.JPanel headersPanel;
-    private javax.swing.JButton jButton6;
     private javax.swing.JScrollPane jsonScrollPane;
     private javax.swing.JLabel jsonTextLabel;
     private javax.swing.JTextArea jsonrequestBody;

@@ -4,6 +4,7 @@
  */
 package DummyP;
 
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,12 +19,19 @@ public class Screen3 extends javax.swing.JFrame {
     public Screen3() {
         initComponents();
     }
- public Screen3(Object[][] tableData) {
+    
+    public Screen3(Object[][] tableData,int state) {
         initComponents();
+        setupFrame(state);
         populateResultTable(tableData);
     }
  
- private void populateResultTable(Object[][] tableData) {
+    private void setupFrame(int state) {
+        setExtendedState(state);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void populateResultTable(Object[][] tableData) {
         DefaultTableModel model = new DefaultTableModel(
             tableData,
             new String[]{"Sl", "Test Name", "Request Body", "Response Code", "Response Body", "Test Result"}
@@ -34,7 +42,11 @@ public class Screen3 extends javax.swing.JFrame {
             }
         };
         resultTable.setModel(model);
+        resultTable.revalidate();
+        resultTable.repaint();
+//      resultTable.getColumnModel().getColumn(2).setCellRenderer(new BeautifiedJsonCellRenderer());
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,7 +57,7 @@ public class Screen3 extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,42 +65,33 @@ public class Screen3 extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Results");
 
-        resultTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Sl", "Test Name", "Request Body", "Response Code", "Response Body", "Test Result"
-            }
-        ));
-        jScrollPane1.setViewportView(resultTable);
+        resultTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        resultTable.setFillsViewportHeight(true);
+        resultTable.setPreferredSize(new java.awt.Dimension(450, 450));
+        resultTable.setRowHeight(30);
+        jScrollPane2.setViewportView(resultTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 483, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane1)))
-                .addGap(41, 41, 41))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 495, Short.MAX_VALUE)))
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                .addGap(50, 50, 50))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -131,7 +134,7 @@ public class Screen3 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable resultTable;
     // End of variables declaration//GEN-END:variables
 }

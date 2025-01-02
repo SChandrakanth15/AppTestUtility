@@ -53,10 +53,6 @@ public class OpenHeaderDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Value");
 
-        nameTextField.setText("Header Name");
-
-        valueTextField.setText("Header Value");
-
         addBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         addBtn.setText("Add");
         addBtn.addActionListener(new java.awt.event.ActionListener() {
