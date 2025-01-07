@@ -4,7 +4,17 @@
  */
 package DummyP;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import static java.lang.System.exit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -12,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,7 +57,7 @@ public class Screen2 extends javax.swing.JFrame {
                 "Field", "Data Type", "Positive Data", "Negative Data", "Error Message"
             }) {
                 Class[] types = new Class[]{
-                    java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
                 };
 
                 @Override
@@ -327,36 +338,183 @@ public class Screen2 extends javax.swing.JFrame {
 
     private void executeTestbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTestbtnActionPerformed
         // TODO add your handling code here:
-        Object[][] screen3TableData;
+        Object[][] screen3TableData = null;
         System.out.println("Table row count: "+jsonTable.getRowCount());
+        printTableData(jsonTable);
+        
         if(jsonTable.getRowCount()== 0){
             screen3TableData = null;
         } else {
             Object[][] requestJson = extractTableData(jsonTable);
-            JSONObject requestBodyJsonObject = convertTableToJson(requestJson);
-            System.out.println(requestBodyJsonObject);
-            System.out.println("the length of the json is : " + requestJson.length);
-            screen3TableData = new Object[requestJson.length][6];
-            for (int i = 0; i < requestJson.length; i++) {
-                String fieldName = (String) requestJson[i][0]; // Assuming [0] is always a String
-                Object testDataObject = requestJson[i][2]; // Positive data
-                String testData = (testDataObject != null) ? testDataObject.toString() : "";
-                String testName = String.format("Verify %s with %s value %s", name, fieldName, testData);
-
-                screen3TableData[i][0] = i + 1; // SL (serial number)
-                screen3TableData[i][1] = testName; // Test Name
-                screen3TableData[i][2] = requestBodyJsonObject;// Req Body (entire JSON)
-                screen3TableData[i][3] = ""; // Res Code (to be filled in Screen3)
-                screen3TableData[i][4] = ""; // Res Body (to be filled in Screen3)
-                screen3TableData[i][5] = ""; // Test Result (to be filled in Screen3)
+            try {
+                screen3TableData = generateRequestBodies(name, jsonTable);
+                System.out.println("Screen 3 row count = "+screen3TableData.length);
+            } catch (Exception ex) {
+                Logger.getLogger(Screen2.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         Screen3 screen3 = new Screen3(screen3TableData,getExtendedState());
         screen3.setVisible(true);
-        setVisible(false);
-        this.dispose();
+//        setVisible(false);
+//        this.dispose();
     }//GEN-LAST:event_executeTestbtnActionPerformed
 
+    private static String beautifyJson(JSONObject json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+            Map<String, Object> map = jsonObjectToMap(json);
+            return writer.writeValueAsString(map);
+        } catch (Exception e) {
+            return json.toString(); // Return the original string if it fails
+        }
+    }
+
+    private static Map<String, Object> jsonObjectToMap(JSONObject jsonObject) {
+        Map<String, Object> map = new HashMap<>();
+        for (Object key : jsonObject.keySet()) {
+            Object value = jsonObject.get((String) key);
+            // Recursively handle nested JSONObjects
+            if (value instanceof JSONObject) {
+                value = jsonObjectToMap((JSONObject) value);
+            } else if (value instanceof JSONArray) {
+                value = jsonArrayToList((JSONArray) value);
+            }
+            map.put((String) key, value);
+        }
+        return map;
+    }
+
+    private static List<Object> jsonArrayToList(JSONArray jsonArray) {
+        List<Object> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Object value = jsonArray.get(i);
+            // Recursively handle nested JSONObjects
+            if (value instanceof JSONObject) {
+                value = jsonObjectToMap((JSONObject) value);
+            } else if (value instanceof JSONArray) {
+                value = jsonArrayToList((JSONArray) value);
+            }
+            list.add(value);
+        }
+        return list;
+    }
+
+     public static Object[][] generateRequestBodies(String name, JTable table) {
+        List<Object[]> requestBodies = new ArrayList<>();
+
+        // Step 1: Extract fields and their values from the JTable
+        JSONObject defaultRequestBody = new JSONObject();
+        List<String> fieldsWithMultipleValues = new ArrayList<>();
+        List<List<Object>> valueCombinations = new ArrayList<>();
+
+        int rowCount = table.getRowCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            String fieldName = table.getValueAt(row, 0).toString(); // Field name
+            String dataType = table.getValueAt(row, 1).toString(); // Data type (String, Integer, Boolean)
+            String valuesStr = table.getValueAt(row, 2).toString(); // Positive values (comma-separated)
+
+            String[] values = valuesStr.split(",");
+            List<Object> parsedValues = new ArrayList<>();
+            for (String value : values) {
+                parsedValues.add(parseValue(dataType, value.trim()));
+            }
+
+            // Add default value (first value in the list) to the request body
+            defaultRequestBody.put(fieldName, parsedValues.get(0));
+
+            // Track fields with multiple values for generating combinations
+            if (parsedValues.size() > 1) {
+                fieldsWithMultipleValues.add(fieldName);
+                valueCombinations.add(parsedValues);
+            }
+        }
+
+        // Step 2: Generate all combinations of values for fields with multiple values
+        if (fieldsWithMultipleValues.isEmpty()) {
+            // If no field has multiple values, generate a single request body
+            String testName = "Verify " + name + " with all default values";
+            requestBodies.add(new Object[]{testName, defaultRequestBody.toString()});
+        } else {
+            generateCombinations(fieldsWithMultipleValues, valueCombinations, defaultRequestBody, name, requestBodies);
+        }
+
+        // Convert the list to an array and return
+        return requestBodies.toArray(new Object[0][]);
+    }
+
+    // Helper method to parse values based on data type
+    private static Object parseValue(String dataType, String value) {
+        switch (dataType.toLowerCase()) {
+            case "integer":
+                return Integer.parseInt(value);
+            case "boolean":
+                return Boolean.parseBoolean(value);
+            default:
+                return value; // Default is String
+        }
+    }
+
+    // Helper method to generate combinations
+    private static void generateCombinations(List<String> fields, List<List<Object>> valueCombinations,
+                                             JSONObject baseRequestBody, String name, List<Object[]> requestBodies) {
+        int[] indices = new int[fields.size()];
+        int totalCombinations = 1;
+
+        for (List<Object> values : valueCombinations) {
+            totalCombinations *= values.size();
+        }
+
+        for (int i = 0; i < totalCombinations; i++) {
+            JSONObject requestBody = new JSONObject(baseRequestBody.toString());
+
+            for (int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++) {
+                String fieldName = fields.get(fieldIndex);
+                Object value = valueCombinations.get(fieldIndex).get(indices[fieldIndex]);
+                requestBody.put(fieldName, value);
+            }
+
+            String testName = "Verify " + name;
+            for (int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++) {
+                String fieldName = fields.get(fieldIndex);
+                Object value = valueCombinations.get(fieldIndex).get(indices[fieldIndex]);
+                testName += String.format(" with %s value %s", fieldName, value);
+            }
+
+            requestBodies.add(new Object[]{testName, requestBody.toString()});
+
+            // Update indices for the next combination
+            for (int j = fields.size() - 1; j >= 0; j--) {
+                if (indices[j] < valueCombinations.get(j).size() - 1) {
+                    indices[j]++;
+                    break;
+                } else {
+                    indices[j] = 0;
+                }
+            }
+        }
+    }
+
+    public static void printTableData(JTable table) {
+        // Get the TableModel (this is where the data is stored)
+        TableModel model = table.getModel();
+
+        // Get the number of rows and columns
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        // Loop through the rows and columns to print the data
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                // Get the value from the model
+                Object value = model.getValueAt(row, col);
+                System.out.print(value + "\t");  // Print the value in the table
+            }
+            System.out.println();  // Move to the next line after each row
+        }
+    }
+    
     private void jsonTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jsonTablePropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_jsonTablePropertyChange
